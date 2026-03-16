@@ -34,17 +34,21 @@ public class WeatherResponseAPI {
     public static HttpResponse<String> getResponse(String countryName) throws IOException, InterruptedException, IllegalArgumentException, URISyntaxException, Exception {
         HttpResponse<String> weatherResponse;
         int timeoutSeconds = 10;
-        String rapidApiKey = System.getenv("WEATHERAPI_RAPIDAPI_KEY");
-        String rapidApiHost = System.getenv("WEATHERAPI_RAPIDAPI_HOST");
-        HttpRequest weatherRequest = HttpRequest.newBuilder()
-                .uri(URI.create("https://weatherapi-com.p.rapidapi.com/current.json?q=" + countryName))
-                .header("X-RapidAPI-Key", rapidApiKey)
-                .header("X-RapidAPI-Host", rapidApiHost)
-                .method("GET", HttpRequest.BodyPublishers.noBody())
-                .timeout(Duration.ofSeconds(timeoutSeconds))
-                .build();
-        weatherResponse = HttpClient.newHttpClient().send(weatherRequest,
-                HttpResponse.BodyHandlers.ofString());
+        String rapidApiKey = EnvLoader.get("WEATHERAPI_RAPIDAPI_KEY");
+        String rapidApiHost = EnvLoader.get("WEATHERAPI_RAPIDAPI_HOST");
+
+        try (HttpClient client = HttpClient.newHttpClient()) {
+            HttpRequest weatherRequest = HttpRequest.newBuilder()
+                    .uri(URI.create("https://weatherapi-com.p.rapidapi.com/current.json?q=" + countryName))
+                    .header("X-RapidAPI-Key", rapidApiKey)
+                    .header("X-RapidAPI-Host", rapidApiHost)
+                    .method("GET", HttpRequest.BodyPublishers.noBody())
+                    .timeout(Duration.ofSeconds(timeoutSeconds))
+                    .build();
+
+            weatherResponse = client.send(weatherRequest, HttpResponse.BodyHandlers.ofString());
+        }
+
         return weatherResponse;
     }
 

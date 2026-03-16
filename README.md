@@ -19,10 +19,27 @@ javac --module-path C:\openjfx-20.0.1_windows-x64_bin-sdk\javafx-sdk-20.0.1\lib 
 ```
 (all on the same line)
 
+on MacOS:
+```bash
+javac 
+--module-path /Users/purplegeminii/javafx-sdk-25/lib 
+--add-modules javafx.controls,javafx.fxml 
+*.java
+```
+
 4. Run the code using the 'java' command. Again, use '--module-path' and '--add-modules'
 option to specify the JavaFX library and modules. In our case:
 
 ```bash
 java --module-path C:\openjfx-20.0.1_windows-x64_bin-sdk\javafx-sdk-20.0.1\lib --add-modules javafx.controls,javafx.fxml MainApp
 ```
-where 'MainApp' is the name of the main class from which our program is run. 
+where 'MainApp' is the name of the main class from which our program is run.
+
+on MacOS:
+```bash
+java 
+--module-path /Users/purplegeminii/javafx-sdk-25/lib 
+--add-modules javafx.controls,javafx.fxml 
+--enable-native-access=javafx.graphics 
+MainApp
+```

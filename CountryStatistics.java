@@ -55,6 +55,7 @@ public class CountryStatistics {
             Pattern precipMMPattern = Pattern.compile("\"precip_mm\":(\\d+\\.?\\d*)");
             Pattern humidityPattern = Pattern.compile("\"humidity\":(\\d+)");
             Pattern co2e_totalPattern = Pattern.compile("\"co2e_total\":(\\d+\\.?\\d*)");
+
             Matcher tempCMatcher = tempCPattern.matcher(response.body());
             Matcher conditionMatcher = conditionPattern.matcher(response.body());
             Matcher pressureMatcher = pressureMBPattern.matcher(response.body());
@@ -62,26 +63,39 @@ public class CountryStatistics {
             Matcher humidityMatcher = humidityPattern.matcher(response.body());
             Matcher co2e_totalMatcher = co2e_totalPattern.matcher(response2.body());
 
-            // if all regex patterns are matched, retrieve data and put it in the map
-            if (tempCMatcher.find() && conditionMatcher.find() && pressureMatcher.find()
-                    && precipMMMatcher.find() && humidityMatcher.find() && co2e_totalMatcher.find()) {
-                tempC = tempCMatcher.group(1);
-                condition = conditionMatcher.group(1);
-                pressureMB = pressureMatcher.group(1);
-                precipMM = precipMMMatcher.group(1);
-                humidity = humidityMatcher.group(1);
-                co2eTotal = co2e_totalMatcher.group(1);
+            map.put("Country", countryName);
 
-                map.put("Country", countryName);
+            if (tempCMatcher.find()) {
+                tempC = tempCMatcher.group(1);
                 map.put("Temperature", tempC);
+            }
+
+            if (conditionMatcher.find()) {
+                condition = conditionMatcher.group(1);
                 map.put("Condition", condition);
+            }
+
+            if (pressureMatcher.find()) {
+                pressureMB = pressureMatcher.group(1);
                 map.put("Pressure", pressureMB);
+            }
+
+            if (precipMMMatcher.find()) {
+                precipMM = precipMMMatcher.group(1);
                 map.put("Precipitation", precipMM);
+            }
+
+            if (humidityMatcher.find()) {
+                humidity = humidityMatcher.group(1);
                 map.put("Humidity", humidity);
+            }
+
+            if (co2e_totalMatcher.find()) {
+                co2eTotal = co2e_totalMatcher.group(1);
                 map.put("Emission", co2eTotal);
-                
             } else {
-                System.err.println("Error: Unable to extract data from the JSON response.");
+                map.put("Emission", "Unavailable");
+                System.err.println("Error: Unable to extract emission data from the JSON response.");
             }
 
         // deal with caught exceptions by printing corresponding messages to users

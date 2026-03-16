@@ -1,0 +1,6 @@
+.idea/
+.vscode/
+EduClima.iml
+out/
+*.class
+.env

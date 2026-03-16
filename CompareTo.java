@@ -57,8 +57,23 @@ public class CompareTo {
      */
     public String compare(String statistic) throws NullPointerException{
         String msg = "";
-        double stat1 = Double.parseDouble(this.country1Stats.getCountryStats(statistic));
-        double stat2 = Double.parseDouble(this.country2Stats.getCountryStats(statistic));
+        String stat1Value = this.country1Stats.getCountryStats(statistic);
+        String stat2Value = this.country2Stats.getCountryStats(statistic);
+
+        if (stat1Value == null || stat2Value == null) {
+            return statistic + " data is unavailable for comparison.";
+        }
+
+        double stat1;
+        double stat2;
+
+        try {
+            stat1 = Double.parseDouble(stat1Value);
+            stat2 = Double.parseDouble(stat2Value);
+        } catch (NumberFormatException e) {
+            return statistic + " data is unavailable for comparison.";
+        }
+
         double value;
         if (stat1 > stat2){
             if (statistic.equals("Humidity")) {
