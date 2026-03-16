@@ -12,12 +12,12 @@ import java.time.Duration;
  * about the C02 of a given country. It has a single
  * method that takes the country's two-letter code as a query, and
  * returns its respective CO2 emission statistics in real time
- * Link to API Documentation: https://www.climatiq.io/docs/guides/quickstart
+ * Link to API Documentation: <a href="https://www.climatiq.io/docs/guides/quickstart">link</a>
  *
  * @author Delali Nsiah-Asare
  * @author Obed Babington
  * @author Ewurama Boateng
-*/
+ */
 public class ClimatiqResponseAPI {
     /**
      * @param countryCode the country code for which to retrieve statistics
@@ -32,7 +32,7 @@ public class ClimatiqResponseAPI {
         HttpResponse<String> climatiqResponse;
         int timeoutSeconds = 10;
 
-        String MY_API_KEY = "W12ANG109DMSH5JEKE7K78NRMWAN";
+        String MY_API_KEY = System.getenv("CLIMATIQ_API_KEY");
         String url = "https://beta3.api.climatiq.io/search";
         String query = "grid mix";
         String query_params = "query=" + URLEncoder.encode(query, StandardCharsets.UTF_8) + "&region="+countryCode;

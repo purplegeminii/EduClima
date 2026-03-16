@@ -11,12 +11,12 @@ import java.time.Duration;
  * about the weather conditions of a given country. It has a single
  * method that takes the country's name as a query, and returns its
  * respective weather statistics in real time
- * Link to API Documentation: https://rapidapi.com/weatherapi/api/weatherapi-com
+ * Link to API Documentation: <a href="https://rapidapi.com/weatherapi/api/weatherapi-com">link</a>
  *
  * @author Delali Nsiah-Asare
  * @author Obed Babington
  * @author Ewurama Boateng
-*/
+ */
 public class WeatherResponseAPI {
 
     /**
@@ -33,20 +33,18 @@ public class WeatherResponseAPI {
      */
     public static HttpResponse<String> getResponse(String countryName) throws IOException, InterruptedException, IllegalArgumentException, URISyntaxException, Exception {
         HttpResponse<String> weatherResponse;
-
         int timeoutSeconds = 10;
-
+        String rapidApiKey = System.getenv("WEATHERAPI_RAPIDAPI_KEY");
+        String rapidApiHost = System.getenv("WEATHERAPI_RAPIDAPI_HOST");
         HttpRequest weatherRequest = HttpRequest.newBuilder()
                 .uri(URI.create("https://weatherapi-com.p.rapidapi.com/current.json?q=" + countryName))
-                .header("X-RapidAPI-Key", "a1b15b49damsh212f2965599c30ep1cb886jsnd8e2d5043ed5")
-                .header("X-RapidAPI-Host", "weatherapi-com.p.rapidapi.com")
+                .header("X-RapidAPI-Key", rapidApiKey)
+                .header("X-RapidAPI-Host", rapidApiHost)
                 .method("GET", HttpRequest.BodyPublishers.noBody())
                 .timeout(Duration.ofSeconds(timeoutSeconds))
                 .build();
-
         weatherResponse = HttpClient.newHttpClient().send(weatherRequest,
                 HttpResponse.BodyHandlers.ofString());
-
         return weatherResponse;
     }
 
