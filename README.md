@@ -1,45 +1,74 @@
-An Explanation of How to Run this Program From the Command Line
+# EduClima
 
-1. Open the command prompt on one's computer
+A JavaFX desktop app for exploring and comparing countries' climate data. Pick a
+country to see its current weather (temperature, conditions, pressure,
+precipitation, humidity) and grid-electricity CO₂ emissions, then pick a second
+country to see a side-by-side comparison.
 
-2. Change the current working directory to  the directory where your code is located. 
-For example, if your code is located in "C:\Users\HP\Desktop\EduClimaProject\src", 
-you can use the following command:
+Data sources:
+- **[WeatherAPI](https://rapidapi.com/weatherapi/api/weatherapi-com)** (via RapidAPI) — current weather.
+- **[Climatiq](https://www.climatiq.io/docs)** — CO₂e emissions for grid electricity.
 
-```bash
-cd C:\Users\HP\Desktop\EduClimaProject\src
-```
+## Requirements
 
-3. Compile the code using the 'javac' command. Use the '--module-path' option to specify
-the path to the JavaFX library, and the '--add-modules' option to add the required 
-modules. In our case, 
+- **JDK 21+** (the build targets a Java 21 toolchain).
+- No separate JavaFX SDK download needed — Gradle pulls JavaFX in automatically.
 
-```bash
-javac --module-path C:\openjfx-20.0.1_windows-x64_bin-sdk\javafx-sdk-20.0.1\lib --add-modules javafx.controls,javafx.fxml MainApp.java
-```
-(all on the same line)
+## Configuration
 
-on MacOS:
-```bash
-javac 
---module-path /Users/purplegeminii/javafx-sdk-25/lib 
---add-modules javafx.controls,javafx.fxml 
-*.java
-```
-
-4. Run the code using the 'java' command. Again, use '--module-path' and '--add-modules'
-option to specify the JavaFX library and modules. In our case:
+The app reads API keys from a `.env` file in the project root (or from real
+environment variables, which take precedence). Copy the example and fill in your keys:
 
 ```bash
-java --module-path C:\openjfx-20.0.1_windows-x64_bin-sdk\javafx-sdk-20.0.1\lib --add-modules javafx.controls,javafx.fxml MainApp
+cp .env.example .env
 ```
-where 'MainApp' is the name of the main class from which our program is run.
 
-on MacOS:
-```bash
-java 
---module-path /Users/purplegeminii/javafx-sdk-25/lib 
---add-modules javafx.controls,javafx.fxml 
---enable-native-access=javafx.graphics 
-MainApp
 ```
+WEATHERAPI_RAPIDAPI_KEY=your-rapidapi-key
+WEATHERAPI_RAPIDAPI_HOST=weatherapi-com.p.rapidapi.com
+CLIMATIQ_API_KEY=your-climatiq-key
+```
+
+- Get a WeatherAPI (RapidAPI) key: https://rapidapi.com/weatherapi/api/weatherapi-com
+- Get a Climatiq key: https://www.climatiq.io/docs/guides/quickstart
+
+`.env` is gitignored and should never be committed.
+
+## Running
+
+```bash
+./gradlew run
+```
+
+(The app launches to a welcome screen without keys; lookups will show a clear
+error message until the keys are configured.)
+
+## Testing & building
+
+```bash
+./gradlew test     # run the unit tests
+./gradlew build    # compile, test, and assemble
+```
+
+## Project structure
+
+```
+src/main/java/com/educlima/
+  ui/        App (JavaFX entry point), ClimateFormatter
+  data/      CountryRepository (country list), ClimateService (orchestration)
+  api/       WeatherApiClient, ClimatiqApiClient (HTTP + JSON parsing)
+  logic/     ClimateComparator (country-vs-country comparison)
+  model/     Country, ClimateData, Metric, ComparisonLine (typed records)
+  util/      EnvLoader
+src/main/resources/com/educlima/
+  countries.csv   country names + ISO codes
+  app.css         UI styling
+src/test/java/com/educlima/   unit tests (JUnit 5)
+```
+
+Network calls run on a background thread, so the UI never freezes; lookups show
+explicit loading and error states.
+
+## Authors
+
+Delali Nsiah-Asare · Obed Babington · Ewurama Boateng
